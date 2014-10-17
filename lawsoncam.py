@@ -23,15 +23,8 @@ class LawsonCamera(object):
         return self.getFrame()[24:]
 
 
-
-    def __call__(self,retjpeg=False):
-        img = self.getLawsonFrame()
-
-        f = cv2.cvtColor(cv2.resize(img,self.calcsize), cv2.COLOR_RGB2GRAY).astype(np.float32)
-
-        for k in self.keys:
-            f = f*self.keys[k]
-        return cv2.cvtColor(f.astype(np.uint8),cv2.COLOR_GRAY2RGB)
+    def __call__(self):
+        return self.viewKeys()
 
     def jpgstream(self):
         #Used for mjpeg stream in server
@@ -60,6 +53,15 @@ class LawsonCamera(object):
         for f in files:
             self.keyFromImage(f)
         
+    def viewKeys(self):
+        img = self.getLawsonFrame()
+
+        f = cv2.cvtColor(cv2.resize(img,self.calcsize), cv2.COLOR_RGB2GRAY).astype(np.float32)
+        tot = np.zeros(f.shape,dtype=np.float32)
+        for k in self.keys:
+            tot += f*self.keys[k]
+        tot = 255.*tot/np.max(tot)
+        return cv2.cvtColor(tot.astype(np.uint8),cv2.COLOR_GRAY2RGB)
 
 if (__name__=="__main__"):
     #c = LawsonCamera("http://128.10.29.32/mjpg/1/video.mjpg")
