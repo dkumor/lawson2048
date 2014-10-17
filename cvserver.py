@@ -24,8 +24,10 @@ class CamHandler(BaseHTTPRequestHandler):
         global speed
         if self.path.endswith('.mjpg'):
             
-            cam = LawsonCamera("http://128.10.29.32/mjpg/1/video.mjpg")
-            #cam = LawsonCamera()
+            cam = LawsonCamera()
+            cam.loadGlob("./assets/keys/*.jpg")
+            cam.start("http://128.10.29.32/mjpg/1/video.mjpg")
+            #cam.start()
 
             reset = False
             self.send_response(200)
