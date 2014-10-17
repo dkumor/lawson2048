@@ -130,6 +130,13 @@ GameManager.prototype.moveTile = function (tile, cell) {
 GameManager.prototype.move = function (direction) {
   // 0: up, 1: right, 2: down, 3: left
   var self = this;
+  
+  var moves = ["Up", "Right", "Down", "Left"];
+  
+  var mv = moves[direction];
+  document.getElementById("last").textContent = mv;
+  //$.growl({ title: "Last Move", message: mv});
+  
 
   if (this.isGameTerminated()) return; // Don't do anything if the game's over
 

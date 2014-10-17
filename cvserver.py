@@ -22,6 +22,10 @@ class CamHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         global rect
         global speed
+        
+        if self.path in ["", None, "/"]:
+            self.path = "/index.html"
+        
         if self.path.endswith('.mjpg'):
             
             cam = LawsonCamera()

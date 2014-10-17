@@ -59,16 +59,6 @@ KeyboardInputManager.prototype.listen = function () {
       if (mapped !== undefined) {
         event.preventDefault();
         self.emit("move", mapped);
-        
-        
-        if(mapped == 0) //up
-            document.getElementById("last").textContent = "up";
-        if(mapped == 1) //right
-            document.getElementById("last").textContent = "right";
-        if(mapped == 2) // down
-            document.getElementById("last").textContent = "down"
-        if(mapped == 3) // left
-            document.getElementById("last").textContent = "left";
       }
     }
 
