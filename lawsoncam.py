@@ -10,7 +10,8 @@ import os
 
 class LawsonCamera(object):
     """Allows key control based on Lawson's webcam"""
-    calcsize = (512,372)
+    #calcsize = (512,372)
+    calcsize = (1024,744)
     def __init__(self):
         self.keys = {}
 
