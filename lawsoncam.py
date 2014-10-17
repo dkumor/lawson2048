@@ -18,7 +18,7 @@ class LawsonCamera(object):
     def __call__(self,retjpeg=False):
         return self.getLawsonFrame()
     def jpgstream(self):
-        img = Image.fromarray(self())
+        img = Image.fromarray(cv2.cvtColor(self(),cv2.COLOR_BGR2RGB))
         jpg = StringIO()
         img.save(jpg,'JPEG')
         return jpg.getvalue()
