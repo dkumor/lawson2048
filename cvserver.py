@@ -79,9 +79,9 @@ class CamHandler(BaseHTTPRequestHandler):
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
-def main():
+def main(port):
     try:
-        server = ThreadedTCPServer(('',8080), CamHandler)
+        server = ThreadedTCPServer(('',port), CamHandler)
         print "server started"
         server.serve_forever()
     except KeyboardInterrupt:
