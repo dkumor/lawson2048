@@ -28,8 +28,8 @@ class LawsonCamera(object):
         
 
 if (__name__=="__main__"):
+    #c = LawsonCamera("http://128.10.29.32/mjpg/1/video.mjpg")
     c = LawsonCamera()
-    
     while (1):
         img = c()
         cv2.imshow('VIDEO', img)

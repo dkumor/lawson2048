@@ -17,10 +17,6 @@ import logging
 
 sitedir = os.path.dirname(os.path.realpath(__file__))
 
-averageover = 100
-
-#Bigger number means slower
-
 
 class CamHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -28,7 +24,8 @@ class CamHandler(BaseHTTPRequestHandler):
         global speed
         if self.path.endswith('.mjpg'):
             
-            cam = LawsonCamera()
+            cam = LawsonCamera("http://128.10.29.32/mjpg/1/video.mjpg")
+            #cam = LawsonCamera()
 
             reset = False
             self.send_response(200)
