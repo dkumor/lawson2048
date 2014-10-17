@@ -1,8 +1,10 @@
 import numpy as np
+from numpy.random import uniform
+
 import cv2
 from PIL import Image
-from cStringIO import StringIO
 
+from cStringIO import StringIO
 import glob
 import os
 
@@ -53,15 +55,39 @@ class LawsonCamera(object):
         for f in files:
             self.keyFromImage(f)
         
-    def viewKeys(self):
+    def viewkey(self,key):
+        #Shows the part of the image associated with a specific bitmap
         img = self.getLawsonFrame()
-
         f = cv2.cvtColor(cv2.resize(img,self.calcsize), cv2.COLOR_RGB2GRAY).astype(np.float32)
-        tot = np.zeros(f.shape,dtype=np.float32)
-        for k in self.keys:
-            tot += f*self.keys[k]
-        tot = 255.*tot/np.max(tot)
+        f = f*self.keys[key]
         return cv2.cvtColor(tot.astype(np.uint8),cv2.COLOR_GRAY2RGB)
+
+    def viewKeys(self):
+        #Shows all keys at the same time in their own colors
+
+        #The color map needs to be consistent
+        if not (hasattr(self,"keycolors")):
+            self.keycolors = {}
+
+        img = self.getLawsonFrame()
+        f = cv2.cvtColor(cv2.resize(img,self.calcsize), cv2.COLOR_RGB2GRAY).astype(np.float32)
+        tot = np.zeros((self.calcsize[1],self.calcsize[0],3),dtype=np.float32)
+        
+        for k in self.keys:
+            i  = f*self.keys[k]
+            j = cv2.cvtColor(i.astype(np.uint8),cv2.COLOR_GRAY2RGB).astype(np.float32)
+
+            if not (k in self.keycolors):
+                self.keycolors[k] = uniform(size=3)
+
+            color = self.keycolors[k]
+            j[:,:,0] *= color[0]
+            j[:,:,1] *= color[1]
+            j[:,:,2] *= color[2]
+            
+            tot += j
+
+        return (255.*tot/np.max(tot)).astype(np.uint8)
 
 if (__name__=="__main__"):
     #c = LawsonCamera("http://128.10.29.32/mjpg/1/video.mjpg")
