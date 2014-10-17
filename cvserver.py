@@ -20,14 +20,7 @@ sitedir = os.path.dirname(os.path.realpath(__file__))
 averageover = 100
 
 #Bigger number means slower
-speed = 3000000.0
-equalizer= 1200.0
-rect = {
-    "up": [(170,0+15),(170*2,128+15),0,zeros(averageover)],
-    "down": [(170,128*2),(170*2,128*3),0,zeros(averageover)],
-    "left": [(0,128),(170,128*2),0,zeros(averageover)],
-    "right": [(170*2,128),(170*3,128*2),0,zeros(averageover)],
-}
+
 
 class CamHandler(BaseHTTPRequestHandler):
     def do_GET(self):
