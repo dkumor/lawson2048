@@ -29,16 +29,49 @@
     }
 
     .container {
-        margin-left: 100px;
-        float:left;
+        /*margin-left: 100px;
+        float:left;*/
     }
 
     .rightcontainer {
-        float:right;
-        margin-right:100px;
-        margin-top:100px;
+       position: absolute;
+        top: 0px;
+        left: 0px;
+        width: 100%;
+        height: 100%;
+        background-color: #1a2b3c;
+        z-index: -1;
+        background-image: url(/cam.mjpg); /*/cam.mjpg*/
+        background-size: 100%;
+
     }
     .lastkey {
+        text-align:center;
+    }
+    
+    .game-container {
+        background: rgba(139, 139, 139, 0.88);
+        box-shadow: 10px 10px 5px rgba(0,0,0,.5);
+    }
+    
+    .scores-container {
+
+ }
+    .score-container {
+        background:rgba(139, 139, 139, 0.88);
+    }
+    
+    .best-container {
+        background:rgba(139, 139, 139, 0.88);
+    }
+    
+    .heading {
+       position: absolute;
+        top: 0px;
+        left: 0px;
+        color:#fff;
+        top:1em;
+        left:1em;
         text-align:center;
     }
   </style>
@@ -104,14 +137,14 @@
   </div>
 
   <div class='rightcontainer'>
-    <img src="/cam.mjpg"/>
-    <hr>
+  </div>
+  
+  <div class=''>
     <p>Move around the room to vote for moving left, right, up or down!</p>
-
-    <br>
-
     <h2 class='lastkey'>Last was: <span id="last"></span></h2>
   </div>
+  
+  
   <script src="js/bind_polyfill.js"></script>
   <script src="js/classlist_polyfill.js"></script>
   <script src="js/animframe_polyfill.js"></script>
