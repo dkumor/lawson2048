@@ -1,9 +1,9 @@
 #!/usr/bin/env python
-import cvserver
+import server
 import sys
 
 if __name__ == "__main__":
     port = 8080
     if len(sys.argv) > 1:
         port = int(sys.argv[1])
-    cvserver.main(port)
+    server.main(port)
