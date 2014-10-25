@@ -142,10 +142,14 @@ GameManager.prototype.move = function (direction) {
   var color = colors[direction];
   var border = borders[direction];
 
-  $({alpha:1}).animate({alpha:.5},{
-      duration:1000,
+
+  $({alpha:0}).animate({alpha:500},{    // 100 per time
+      duration:2000, // total time ms
       step: function(){
-          div.css(border,".75em solid rgba(" + color + ","+this.alpha+")");
+          var a = ((this.alpha % 100) / 100) * (1/2.0) + .5;
+          if(this.alpha > 490) // don't kndow when this happens, so we'll hack it
+              a = .5;
+          div.css(border,".75em solid rgba(" + color + ","+ a +")");
       }
   });
 
