@@ -14,7 +14,7 @@ class LawsonCamera(object):
     calcsize = (1024,744)
     ndelta = 0.1
     norm = 0.0
-    multiplier = 50.0
+    multiplier = 1.0
     diffmin = 20
     def __init__(self):
         self.keys = {}
