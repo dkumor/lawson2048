@@ -160,15 +160,15 @@ hr {
   cursor: default;
   background: #bbada0;
   border-radius: 6px;
-  width: calc(500px + 1.5em);
-  height: calc(500px + 1.5em);
+  width: calc(500px + 2em);
+  height: calc(500px + 2em);
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
-  border-bottom: .75em solid rgba(0, 255, 0, .5);
-  border-right: .75em solid rgba(0, 0, 255, .5);
-  border-top: .75em solid rgba(255, 0, 0, .5);
-  border-left: .75em solid rgba(255, 255, 0, .5);
+  border-bottom: 1em solid rgba(0, 255, 0, .5);
+  border-right: 1em solid rgba(0, 0, 255, .5);
+  border-top: 1em solid rgba(255, 0, 0, .5);
+  border-left: 1em solid rgba(255, 255, 0, .5);
 }
 .game-container .game-message {
   display: none;

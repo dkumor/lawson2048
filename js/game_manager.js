@@ -149,7 +149,7 @@ GameManager.prototype.move = function (direction) {
           var a = ((this.alpha % 100) / 100) * (1/2.0) + .5;
           if(this.alpha > 490) // don't kndow when this happens, so we'll hack it
               a = .5;
-          div.css(border,".75em solid rgba(" + color + ","+ a +")");
+          div.css(border,"1em solid rgba(" + color + ","+ a +")");
       }
   });
 
