@@ -22,6 +22,9 @@ sitedir = os.path.dirname(os.path.realpath(__file__))
 server = None  # the current executing server so we can do shutdown
 
 class CamHandler(BaseHTTPRequestHandler):
+    def log_message(self, format, *args):
+        return
+
     def do_GET(self):
         global rect
         global speed

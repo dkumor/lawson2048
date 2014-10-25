@@ -66,7 +66,7 @@ def update_pct(up, down, left, right):
     global output
     global mutex
     mutex.acquire()
-    print "u{} d{} l{} r{}".format(up, down, left, right)
+    #print "u{} d{} l{} r{}".format(up, down, left, right)
 
     try:
         output += "\ndocument.getElementById('up-outline').style.opacity = {};\n".format(scalePctAlpha(up))
