@@ -34,6 +34,12 @@ class CamHandler(BaseHTTPRequestHandler):
 
             cam = LawsonCamera()
             cam.loadGlob("./assets/keys/*.jpg")
+
+            cam.addCall("up",keyboard.up())
+            cam.addCall("down",keyboard.down())
+            cam.addCall("left",keyboard.left())
+            cam.addCall("right",keyboard.right())
+
             cam.start("http://128.10.29.32/mjpg/1/video.mjpg")
             #cam.start()
 

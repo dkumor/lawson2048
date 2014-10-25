@@ -12,11 +12,27 @@ class LawsonCamera(object):
     """Allows key control based on Lawson's webcam"""
     #calcsize = (512,372)
     calcsize = (1024,744)
+    ndelta = 0.01
+    norm = 1.0
+    multiplier = 0.1
     def __init__(self):
         self.keys = {}
-
+        self.keyfnc = {}
     def start(self,address="rtsp://128.10.29.32:554/axis-media/media.amp?videocodec=h264&amp;camera=1&amp;streamprofile=Bandwidth"):
         self.cap = cv2.VideoCapture(address)
+
+        #Get a frame
+        self.oldframe = self.resizeToCalc(self.getFrame())
+
+        #Initialize key normalizers
+        self.keynorm = {}
+        self.keyactivation = {}
+        for k in self.keys:
+            self.keynorm[k] = self.norm
+            self.keyactivation[k] = 0.0
+
+
+
     def getFrame(self):
         ret, frame = self.cap.read()
         return frame
@@ -27,7 +43,9 @@ class LawsonCamera(object):
 
 
     def __call__(self):
-        return self.getLawsonFrame()
+        frame = self.getLawsonFrame()
+        self.checkKeyMotion(frame)
+        return frame
 
     def jpgstream(self):
         #Used for mjpeg stream in server
@@ -35,6 +53,9 @@ class LawsonCamera(object):
         jpg = StringIO()
         img.save(jpg,'JPEG')
         return jpg.getvalue()
+
+    def resizeToCalc(self,frame):
+        return cv2.cvtColor(cv2.resize(frame,self.calcsize), cv2.COLOR_RGB2GRAY)
 
     def addkeymap(self,keyname,keyframe):
         """Given a mask for a key: save it!
@@ -48,7 +69,7 @@ class LawsonCamera(object):
         print "Loading file",imgfile
         img = cv2.imread(imgfile)
 
-        img=cv2.cvtColor(cv2.resize(img,self.calcsize), cv2.COLOR_RGB2GRAY)
+        img=self.resizeToCalc(img)
         self.addkeymap(os.path.basename(imgfile[:-4]),img)
 
     def loadGlob(self,g):
@@ -59,7 +80,7 @@ class LawsonCamera(object):
     def viewkey(self,key):
         #Shows the part of the image associated with a specific bitmap
         img = self.getLawsonFrame()
-        f = cv2.cvtColor(cv2.resize(img,self.calcsize), cv2.COLOR_RGB2GRAY).astype(np.float32)
+        f = self.resizeToCalc(img).astype(np.float32)
         f = f*self.keys[key]
         return cv2.cvtColor(tot.astype(np.uint8),cv2.COLOR_GRAY2RGB)
 
@@ -90,11 +111,58 @@ class LawsonCamera(object):
 
         return (255.*tot/np.max(tot)).astype(np.uint8)
 
+    def addCall(self,keyname,fnc,args=()):
+        self.keyfnc[keyname] = (fnc,args)
+
+    def fireKey(self,keyname):
+        if (keyname in self.keyfnc):
+            f = self.keyfnc[keyname]
+            f[0](*f[1])
+
+    def checkKeyMotion(self,frame):
+        frame = self.resizeToCalc(frame)
+
+        #This is the motion in the frame
+        diff = cv2.absdiff(frame,self.oldframe)
+
+        self.oldframe = frame
+
+        for k in self.keys:
+            #Get a normalized amount of motion from the key
+            keymotion = self.multiplier*np.sum(diff*self.keys[k])/float(np.sum(self.keys[k]))/self.keynorm[k]
+            self.keyactivation[k] += keymotion
+
+            self.keynorm[k] += keymotion*self.ndelta
+
+            if (self.keyactivation[k] > 100.0):
+                self.fireKey(k)
+                for l in self.keys:
+                    self.keyactivation[l] = 0
+                break
+
+        #Normalize the norm
+        normmin = np.inf
+        for k in self.keynorm:
+            if (self.keynorm[k]< normmin):
+                normmin = self.keynorm[k]
+        for k in self.keynorm:
+            self.keynorm[k] -= normmin
+
 if (__name__=="__main__"):
-    #c = LawsonCamera("http://128.10.29.32/mjpg/1/video.mjpg")
+    def keyme(key):
+        print key
+
+
     c = LawsonCamera()
+
     c.loadGlob("./assets/keys/*.jpg")
-    c.start()
+    c.addCall("up",keyme,("up",))
+    c.addCall("down",keyme,("down",))
+    c.addCall("left",keyme,("left",))
+    c.addCall("right",keyme,("right",))
+
+    #c.start()
+    c.start("http://128.10.29.32/mjpg/1/video.mjpg")
     print "Ready"
     while (1):
         img = c()

@@ -30,8 +30,8 @@ def getKeypresses():
     mutex.acquire()
     b = ""
     try:
-      b = output
-      output = ""
+        b = output
+        output = ""
     finally:
         mutex.release()
     return b
