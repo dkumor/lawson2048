@@ -13,7 +13,7 @@ class LawsonCamera(object):
     #calcsize = (512,372)
     calcsize = (1024,744)
     ndelta = 0.01
-    norm = 1.0
+    norm = 0.0
     multiplier = 1.0
     def __init__(self):
         self.keys = {}
@@ -129,7 +129,7 @@ class LawsonCamera(object):
 
         for k in self.keys:
             #Get a normalized amount of motion from the key
-            keymotion = self.multiplier*np.sum(diff*self.keys[k])/float(np.sum(self.keys[k]))/self.keynorm[k]
+            keymotion = self.multiplier*np.sum(diff*self.keys[k])/float(np.sum(self.keys[k]))/(1.0+self.keynorm[k])
             self.keyactivation[k] += keymotion
 
             self.keynorm[k] += keymotion*self.ndelta
