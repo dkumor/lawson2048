@@ -22,12 +22,12 @@ class CamHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         global rect
         global speed
-        
+
         if self.path in ["", None, "/"]:
             self.path = "/index.html"
-        
+
         if self.path.endswith('.mjpg'):
-            
+
             cam = LawsonCamera()
             cam.loadGlob("./assets/keys/*.jpg")
             cam.start("http://128.10.29.32/mjpg/1/video.mjpg")
@@ -54,11 +54,11 @@ class CamHandler(BaseHTTPRequestHandler):
 
 
         if 'keyboard_event.js' in self.path:
-          self.send_response(200)
-          self.send_header('Content-type', 'text/javascript')
-          self.end_headers()
-          self.wfile.write(keyboard.getKeypresses())
-          return
+            self.send_response(200)
+            self.send_header('Content-type', 'text/javascript')
+            self.end_headers()
+            self.wfile.write(keyboard.getKeypresses())
+            return
 
 
         pathmap = {'.html':'text/html', '.js':'text/javascript', '.css':'text/css'}
