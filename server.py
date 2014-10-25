@@ -34,11 +34,10 @@ class CamHandler(BaseHTTPRequestHandler):
 
             cam = LawsonCamera()
             cam.loadGlob("./assets/keys/*.jpg")
-
-            cam.addCall("up",keyboard.up())
-            cam.addCall("down",keyboard.down())
-            cam.addCall("left",keyboard.left())
-            cam.addCall("right",keyboard.right())
+            cam.addCall("up",keyboard.up)
+            cam.addCall("down",keyboard.down)
+            cam.addCall("left",keyboard.left)
+            cam.addCall("right",keyboard.right)
 
             cam.start("http://128.10.29.32/mjpg/1/video.mjpg")
             #cam.start()
@@ -58,14 +57,15 @@ class CamHandler(BaseHTTPRequestHandler):
                     self.end_headers()
                     self.wfile.write(jpg)
 
+                    keyboard.update_pct(cam.keyactivation['up'],cam.keyactivation['down'],cam.keyactivation['left'],cam.keyactivation['right'])
+
+
                 except KeyboardInterrupt:
                     break
             return
 
 
         if 'keyboard_event.js' in self.path:
-            keyboard.update_pct(random.randint(0,100),random.randint(0,100),random.randint(0,100),random.randint(0,100))
-
             self.send_response(200)
             self.send_header('Content-type', 'text/javascript')
             self.end_headers()
