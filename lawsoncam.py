@@ -14,7 +14,8 @@ class LawsonCamera(object):
     calcsize = (1024,744)
     ndelta = 0.1
     norm = 0.0
-    multiplier = 3.0
+    multiplier = 50.0
+    diffmin = 20
     def __init__(self):
         self.keys = {}
         self.keyfnc = {}
@@ -38,8 +39,8 @@ class LawsonCamera(object):
         return frame
 
     def getLawsonFrame(self):
-        #Lawson's cameras have a black strip above video feed - remove the strip
-        return self.getFrame()[24:]
+        #Lawson's cameras have a black strip above video feed - remove the strip, and mirror the image
+        return cv2.flip(self.getFrame()[24:],1)
 
 
     def __call__(self):
@@ -124,7 +125,7 @@ class LawsonCamera(object):
 
         #This is the motion in the frame
         diff = cv2.absdiff(frame,self.oldframe)
-
+        diff[diff < self.diffmin] = 0    #Gets rid of noise in the input data
         self.oldframe = frame
 
         for k in self.keys:
