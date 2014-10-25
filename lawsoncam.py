@@ -12,9 +12,9 @@ class LawsonCamera(object):
     """Allows key control based on Lawson's webcam"""
     #calcsize = (512,372)
     calcsize = (1024,744)
-    ndelta = 0.01
+    ndelta = 0.1
     norm = 0.0
-    multiplier = 1.0
+    multiplier = 3.0
     def __init__(self):
         self.keys = {}
         self.keyfnc = {}
@@ -132,10 +132,9 @@ class LawsonCamera(object):
             keymotion = self.multiplier*np.sum(diff*self.keys[k])/float(np.sum(self.keys[k]))/(1.0+self.keynorm[k])
             self.keyactivation[k] += keymotion
 
-            self.keynorm[k] += keymotion*self.ndelta
-
             if (self.keyactivation[k] > 100.0):
                 self.fireKey(k)
+                self.keynorm[k] += self.ndelta
                 for l in self.keys:
                     self.keyactivation[l] = 0.0
                 break
@@ -147,6 +146,14 @@ class LawsonCamera(object):
                 normmin = self.keynorm[k]
         for k in self.keynorm:
             self.keynorm[k] -= normmin
+
+        #Normalize the activation of the keys
+        activmin = np.inf
+        for k in self.keyactivation:
+            if (self.keyactivation[k] < activmin):
+                activmin = self.keyactivation[k]
+        for k in self.keyactivation:
+            self.keyactivation[k] -= activmin
 
 if (__name__=="__main__"):
     def keyme(key):
@@ -166,12 +173,11 @@ if (__name__=="__main__"):
     print "Ready"
     while (1):
         img = c()
-
+        print c.keyactivation
         cv2.imshow('s: save image, anything else: quit', img)
         k = cv2.waitKey(1)
         if (k==ord('s')):
             img = c.jpgstream()
-            print c.keyactivation
             print "Writing image lwsn.jpg... (will freeze for a bit)"
             with open("lwsn.jpg","wb") as f:
                 f.write(img)
