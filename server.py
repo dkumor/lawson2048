@@ -14,14 +14,17 @@ import SocketServer
 import os
 from threading import Thread
 import logging
+import sys
 
 sitedir = os.path.dirname(os.path.realpath(__file__))
 
+server = None  # the current executing server so we can do shutdown
 
 class CamHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         global rect
         global speed
+        global shutdown
 
         if self.path in ["", None, "/"]:
             self.path = "/index.html"
@@ -60,6 +63,13 @@ class CamHandler(BaseHTTPRequestHandler):
             self.wfile.write(keyboard.getKeypresses())
             return
 
+        if "shutdown" in self.path:
+            self.send_response(200)
+            self.send_header('Content-type', 'text/html')
+            self.end_headers()
+            self.wfile.write("<h1>Shutdown!</h1>")
+            server.shutdown()
+            return
 
         pathmap = {'.html':'text/html', '.js':'text/javascript', '.css':'text/css'}
         mime = 'application/octet-stream'
@@ -84,9 +94,22 @@ class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
 def main(port):
+    global server
+
+    if server != None:
+        server.shutdown()
     try:
         server = ThreadedTCPServer(('',port), CamHandler)
         print "server started"
         server.serve_forever()
     except KeyboardInterrupt:
         server.socket.close()
+
+
+if __name__ == "__main__":
+    port = 8080
+    if len(sys.argv) > 1:
+        port = int(sys.argv[1])
+
+    print("Starting on http://localhost:{}".format(port))
+    main(port)
