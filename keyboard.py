@@ -55,3 +55,24 @@ def right():
     ui = "right"
     #keypress(ui, e.KEY_D)
     keypress(ui, 1)
+
+def scalePctAlpha(num):
+    return num / 200.0  + .5
+
+
+def update_pct(up, down, left, right):
+    ''' in = 4 int values 0-100 in pct
+    '''
+    global output
+    global mutex
+    mutex.acquire()
+    print "u{} d{} l{} r{}".format(up, down, left, right)
+
+    try:
+        output += "\ndocument.getElementById('up-outline').style.opacity = {};\n".format(scalePctAlpha(up))
+        output += "\ndocument.getElementById('down-outline').style.opacity = {};\n".format(scalePctAlpha(down))
+        output += "\ndocument.getElementById('left-outline').style.opacity = {};\n".format(scalePctAlpha(left))
+        output += "\ndocument.getElementById('right-outline').style.opacity = {};\n".format(scalePctAlpha(right))
+
+    finally:
+        mutex.release()

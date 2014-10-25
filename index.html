@@ -26,38 +26,50 @@
         float:left;*/
     }
 
-    .rightcontainer {
-       position: absolute;
-        top: 0px;
+
+
+    .circle-overlay {
+         background-image: url(./assets/outline_alphas.png);
+         z-index: -1;
+    }
+
+    .fullimg {
+        position: absolute;
+        top:0px;
         left: 0px;
         width: 100%;
         height: 100%;
-        z-index: -2;
-        background-image: url(/cam.mjpg); /*/cam.mjpg*/
         background-size: 100% 100%;
-
     }
 
-    .circle-overlay {
-        position: absolute;
-         top: 0px;
-         left: 0px;
-         width: 100%;
-         height: 100%;
-         background-image: url(overlay.png);
-         z-index: -1;
-         background-size: 100% 100%;
+    .left-outline {
+         background-image: url(./assets/left_outline.png);
+         z-index: -3;
+    }
+
+    .right-outline {
+         background-image: url(./assets/right_outline.png);
+         z-index: -3;
+    }
+
+    .up-outline {
+         background-image: url(./assets/up_outline.png);
+         z-index: -3;
+    }
+
+    .down-outline {
+         background-image: url(./assets/down_outline.png);
+         z-index: -3;
+    }
+
+    .rightcontainer {
+        z-index: -8;
+        background-image: url(/cam.mjpg); /*/cam.mjpg*/
     }
 
     .underlay {
-        position: absolute;
-         top: 0px;
-         left: 0px;
-         width: 100%;
-         height: 100%;
-         background-image: url(lwsn.jpg);
-         z-index: -3;
-         background-size: 100% 100%;
+         background-image: url(./assets/ripple.gif);
+         z-index: -100;
     }
 
     .lastkey {
@@ -170,10 +182,17 @@
     </div>
   </div>
 
-  <div class='circle-overlay'></div>
+    <div class='circle-overlay fullimg' id='circle-overlay'></div>
+    <div class='left-outline fullimg' id='left-outline'></div>
+    <div class='right-outline fullimg' id='right-outline'></div>
+    <div class='up-outline fullimg' id="up-outline"></div>
+    <div class='down-outline fullimg' id='down-outline'></div>
 
-  <div class='rightcontainer'>
+
+  <div class='rightcontainer fullimg'>
   </div>
+
+
 
   <div class='underlay'></div>
 

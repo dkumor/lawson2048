@@ -15,6 +15,7 @@ import os
 from threading import Thread
 import logging
 import sys
+import random
 
 sitedir = os.path.dirname(os.path.realpath(__file__))
 
@@ -33,11 +34,10 @@ class CamHandler(BaseHTTPRequestHandler):
 
             cam = LawsonCamera()
             cam.loadGlob("./assets/keys/*.jpg")
-
-            cam.addCall("up",keyboard.up())
-            cam.addCall("down",keyboard.down())
-            cam.addCall("left",keyboard.left())
-            cam.addCall("right",keyboard.right())
+            cam.addCall("up",keyboard.up)
+            cam.addCall("down",keyboard.down)
+            cam.addCall("left",keyboard.left)
+            cam.addCall("right",keyboard.right)
 
             cam.start("http://128.10.29.32/mjpg/1/video.mjpg")
             #cam.start()
@@ -56,6 +56,9 @@ class CamHandler(BaseHTTPRequestHandler):
                     self.send_header('Content-length',len(jpg))
                     self.end_headers()
                     self.wfile.write(jpg)
+
+                    keyboard.update_pct(cam.keyactivation['up'],cam.keyactivation['down'],cam.keyactivation['left'],cam.keyactivation['right'])
+
 
                 except KeyboardInterrupt:
                     break
