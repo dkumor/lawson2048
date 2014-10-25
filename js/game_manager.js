@@ -130,13 +130,25 @@ GameManager.prototype.moveTile = function (tile, cell) {
 GameManager.prototype.move = function (direction) {
   // 0: up, 1: right, 2: down, 3: left
   var self = this;
-  
+
   var moves = ["Up", "Right", "Down", "Left"];
-  
+  var borders = ["border-top", "border-right", "border-bottom", "border-left"];
+  var colors = ["255, 0, 0", "0,0,255", "0,255,0", "255,255,0"];
+
   var mv = moves[direction];
   document.getElementById("last").textContent = mv;
   //$.growl({ title: "Last Move", message: mv});
-  
+  var div = $(".game-container");
+  var color = colors[direction];
+  var border = borders[direction];
+
+  $({alpha:1}).animate({alpha:.5},{
+      duration:1000,
+      step: function(){
+          div.css(border,".75em solid rgba(" + color + ","+this.alpha+")");
+      }
+  });
+
 
   if (this.isGameTerminated()) return; // Don't do anything if the game's over
 

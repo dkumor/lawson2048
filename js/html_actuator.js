@@ -130,7 +130,7 @@ HTMLActuator.prototype.message = function (won) {
 
   this.messageContainer.classList.add(type);
   this.messageContainer.getElementsByTagName("p")[0].textContent = message;
-  
+
   // JAL 2014-10-05 - timeout and restart the game.
   setTimeout(function(){
     location.reload();

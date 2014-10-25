@@ -5,20 +5,11 @@
   <title>2048</title>
 
 
-  <script src="https://code.jquery.com/jquery-2.1.1.min.js" type='text/javascript'></script>
+  <script src="js/jquery.min.js" type='text/javascript'></script>
     <script src="/js/jquery.growl.js" type="text/javascript"></script>
     <link href="/style/jquery.growl.css" rel="stylesheet" type="text/css" />
 
   <link href="style/main.css" rel="stylesheet" type="text/css">
-  <link rel="shortcut icon" href="favicon.ico">
-  <link rel="apple-touch-icon" href="meta/apple-touch-icon.png">
-  <link rel="apple-touch-startup-image" href="meta/apple-touch-startup-image-640x1096.png" media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2)"> <!-- iPhone 5+ -->
-  <link rel="apple-touch-startup-image" href="meta/apple-touch-startup-image-640x920.png"  media="(device-width: 320px) and (device-height: 480px) and (-webkit-device-pixel-ratio: 2)"> <!-- iPhone, retina -->
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
   <meta name="viewport" content="width=device-width, target-densitydpi=160dpi, initial-scale=1.0, maximum-scale=1, user-scalable=no, minimal-ui">
 
   <style type='text/css'>
@@ -41,32 +32,59 @@
         left: 0px;
         width: 100%;
         height: 100%;
-        background-color: #1a2b3c;
-        z-index: -1;
-        background-image: url(/cam.mjpg); /*/cam.mjpg*/
+        z-index: -2;
+        background-image: url(http://128.10.29.32/mjpg/1/video.mjpg); /*/cam.mjpg*/
         background-size: 100% 100%;
 
     }
+
+    .circle-overlay {
+        position: absolute;
+         top: 0px;
+         left: 0px;
+         width: 100%;
+         height: 100%;
+         background-image: url(overlay.png);
+         z-index: -1;
+         background-size: 100% 100%;
+    }
+
+    .underlay {
+        position: absolute;
+         top: 0px;
+         left: 0px;
+         width: 100%;
+         height: 100%;
+         background-image: url(lwsn.jpg);
+         z-index: -3;
+         background-size: 100% 100%;
+    }
+
     .lastkey {
         text-align:center;
     }
-    
+
     .game-container {
         background: rgba(139, 139, 139, 0.88);
         box-shadow: 10px 10px 5px rgba(0,0,0,.5);
+
+        /* vertical centering */
+        position: absolute;
+        top: 50%;
+        margin-top: -250px;
     }
-    
+
     .scores-container {
         display:none;
     }
     .score-container {
         background:rgba(139, 139, 139, 0.88);
     }
-    
+
     .best-container {
         background:rgba(139, 139, 139, 0.88);
     }
-    
+
     .heading {
        position: absolute;
         top: 0px;
@@ -76,7 +94,7 @@
         left:1em;
         text-align:center;
     }
-    
+
     .devinfo {
         display:box;
         position:absolute;
@@ -87,6 +105,10 @@
         text-shadow: 2px 2px rgba(0,0,0,.5);
         line-height: 1.2em;
     }
+
+    .lastkey {
+        display:none;
+        }
   </style>
 
 
@@ -148,21 +170,25 @@
     </div>
   </div>
 
+  <div class='circle-overlay'></div>
+
   <div class='rightcontainer'>
   </div>
-  
+
+  <div class='underlay'></div>
+
   <div class='lastmove'>
     <!--<p>Move around the room to vote for moving left, right, up or down!</p>-->
     <h2 class='lastkey'>Last was: <span id="last"></span></h2>
   </div>
-  
+
   <div class='devinfo'>
   <p>By Daniel Kumor & Joseph Lewis, github.com/dkumor/lawson2048
   <br>Original game by Gabriele Cirulli under an MIT license</p>
 
   </div>
-  
-  
+
+
   <script src="js/bind_polyfill.js"></script>
   <script src="js/classlist_polyfill.js"></script>
   <script src="js/animframe_polyfill.js"></script>
