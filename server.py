@@ -15,6 +15,7 @@ import os
 from threading import Thread
 import logging
 import sys
+import random
 
 sitedir = os.path.dirname(os.path.realpath(__file__))
 
@@ -57,6 +58,8 @@ class CamHandler(BaseHTTPRequestHandler):
 
 
         if 'keyboard_event.js' in self.path:
+            keyboard.update_pct(random.randint(0,100),random.randint(0,100),random.randint(0,100),random.randint(0,100))
+
             self.send_response(200)
             self.send_header('Content-type', 'text/javascript')
             self.end_headers()
