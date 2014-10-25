@@ -20,14 +20,14 @@ class LawsonCamera(object):
     def getFrame(self):
         ret, frame = self.cap.read()
         return frame
-    
+
     def getLawsonFrame(self):
         #Lawson's cameras have a black strip above video feed - remove the strip
         return self.getFrame()[24:]
 
 
     def __call__(self):
-        return self.viewKeys()
+        return self.getLawsonFrame()
 
     def jpgstream(self):
         #Used for mjpeg stream in server
@@ -55,7 +55,7 @@ class LawsonCamera(object):
         files = glob.glob(g)
         for f in files:
             self.keyFromImage(f)
-        
+
     def viewkey(self,key):
         #Shows the part of the image associated with a specific bitmap
         img = self.getLawsonFrame()
@@ -73,7 +73,7 @@ class LawsonCamera(object):
         img = self.getLawsonFrame()
         f = cv2.cvtColor(cv2.resize(img,self.calcsize), cv2.COLOR_RGB2GRAY).astype(np.float32)
         tot = np.zeros((self.calcsize[1],self.calcsize[0],3),dtype=np.float32)
-        
+
         for k in self.keys:
             i  = f*self.keys[k]
             j = cv2.cvtColor(i.astype(np.uint8),cv2.COLOR_GRAY2RGB).astype(np.float32)
@@ -85,7 +85,7 @@ class LawsonCamera(object):
             j[:,:,0] *= color[0]
             j[:,:,1] *= color[1]
             j[:,:,2] *= color[2]
-            
+
             tot += j
 
         return (255.*tot/np.max(tot)).astype(np.uint8)
@@ -98,7 +98,7 @@ if (__name__=="__main__"):
     print "Ready"
     while (1):
         img = c()
-        
+
         cv2.imshow('s: save image, anything else: quit', img)
         k = cv2.waitKey(1)
         if (k==ord('s')):
@@ -109,5 +109,3 @@ if (__name__=="__main__"):
             print "Finished writing"
         elif (k >0):
             break
-    
-    
