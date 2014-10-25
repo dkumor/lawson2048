@@ -137,7 +137,7 @@ class LawsonCamera(object):
             if (self.keyactivation[k] > 100.0):
                 self.fireKey(k)
                 for l in self.keys:
-                    self.keyactivation[l] = 0
+                    self.keyactivation[l] = 0.0
                 break
 
         #Normalize the norm
@@ -171,6 +171,7 @@ if (__name__=="__main__"):
         k = cv2.waitKey(1)
         if (k==ord('s')):
             img = c.jpgstream()
+            print c.keyactivation
             print "Writing image lwsn.jpg... (will freeze for a bit)"
             with open("lwsn.jpg","wb") as f:
                 f.write(img)
