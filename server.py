@@ -81,9 +81,11 @@ class CamHandler(BaseHTTPRequestHandler):
             mime = 'application/octet-stream'
 
         self.send_200_type(mime)
-        with open(sitedir + self.path) as f:
-            self.wfile.write(f.read())
-        
+        try:
+            with open(sitedir + self.path) as f:
+                self.wfile.write(f.read())
+        except:
+            pass #ignore it    
 
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
