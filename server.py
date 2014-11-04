@@ -4,31 +4,35 @@
 
 '''
 
-from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
+from BaseHTTPServer import BaseHTTPRequestHandler, HTTPServer
 from lawsoncam import LawsonCamera
-import urllib
-import numpy as np
-import time
 import keyboard
 import SocketServer
 import os
-from threading import Thread
-import logging
 import sys
-import random
+import mimetypes
 
 sitedir = os.path.dirname(os.path.realpath(__file__))
-
 server = None  # the current executing server so we can do shutdown
 
 class CamHandler(BaseHTTPRequestHandler):
     def log_message(self, format, *args):
         return
+        
+    def send_200_type(self, contenttype, length=None):
+        self.send_response(200)
+        self.send_header('Content-type', contenttype)
+        
+        if length != None:
+            self.send_header('Content-length', length)
+        
+        self.end_headers()
 
     def do_GET(self):
-        global rect
-        global speed
-        global shutdown
+        global server
+        
+        if "?" in self.path:
+            self.path = self.path[:self.path.find("?")]
 
         if self.path in ["", None, "/"]:
             self.path = "/index.html"
@@ -43,25 +47,18 @@ class CamHandler(BaseHTTPRequestHandler):
             cam.addCall("right",keyboard.right)
 
             cam.start("http://128.10.29.32/mjpg/1/video.mjpg")
-            #cam.start()
 
-            reset = False
-            self.send_response(200)
-            self.send_header('Content-type','multipart/x-mixed-replace; boundary=--jpgboundary')
-            self.end_headers()
+            self.send_200_type('multipart/x-mixed-replace; boundary=--jpgboundary')
 
             while True:
                 try:
 
                     jpg = cam.jpgstream()
                     self.wfile.write("--jpgboundary")
-                    self.send_header('Content-type','image/jpeg')
-                    self.send_header('Content-length',len(jpg))
-                    self.end_headers()
+                    self.send_200_type('image/jpeg', len(jpg))
                     self.wfile.write(jpg)
 
                     keyboard.update_pct(cam.keyactivation['up'],cam.keyactivation['down'],cam.keyactivation['left'],cam.keyactivation['right'])
-
 
                 except KeyboardInterrupt:
                     break
@@ -69,59 +66,40 @@ class CamHandler(BaseHTTPRequestHandler):
 
 
         if 'keyboard_event.js' in self.path:
-            self.send_response(200)
-            self.send_header('Content-type', 'text/javascript')
-            self.end_headers()
+            self.send_200_type('text/javascript')
             self.wfile.write(keyboard.getKeypresses())
             return
 
         if "shutdown" in self.path:
-            self.send_response(200)
-            self.send_header('Content-type', 'text/html')
-            self.end_headers()
+            self.send_200_type('text/html')
             self.wfile.write("<h1>Shutdown!</h1>")
             server.shutdown()
             return
 
-        pathmap = {'.html':'text/html', '.js':'text/javascript', '.css':'text/css'}
-        mime = 'application/octet-stream'
+        mime, tmp = mimetypes.guess_type(self.path)
+        if mime == None:
+            mime = 'application/octet-stream'
 
-        for k, v  in pathmap.items():
-            if self.path.endswith(k):
-                mime = v
-
-        self.send_response(200)
-        self.send_header('Content-type', mime)
-        self.end_headers()
-        try:
-            f = open(sitedir + self.path)
+        self.send_200_type(mime)
+        with open(sitedir + self.path) as f:
             self.wfile.write(f.read())
-            f.close()
-        except IOError, e: # probably means we tried fetching a directory
-            self.wfile.write("Couldn't find file")
-            print e
+        
 
 
 class ThreadedTCPServer(SocketServer.ThreadingMixIn, SocketServer.TCPServer):
     pass
 
-def main(port):
-    global server
-
-    if server != None:
-        server.shutdown()
+if __name__ == "__main__":
     try:
-        server = ThreadedTCPServer(('',port), CamHandler)
+        port = int(sys.argv[1])
+    except:
+        port = 8080
+
+    print("Starting on http://localhost:{}".format(port))
+    
+    try:
+        server = ThreadedTCPServer(('', port), CamHandler)
         print "server started"
         server.serve_forever()
     except KeyboardInterrupt:
         server.socket.close()
-
-
-if __name__ == "__main__":
-    port = 8080
-    if len(sys.argv) > 1:
-        port = int(sys.argv[1])
-
-    print("Starting on http://localhost:{}".format(port))
-    main(port)
