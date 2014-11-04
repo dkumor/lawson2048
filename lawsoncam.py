@@ -1,10 +1,6 @@
 import numpy as np
 from numpy.random import uniform
-
 import cv2
-from PIL import Image
-
-from cStringIO import StringIO
 import glob
 import os
 
@@ -50,10 +46,10 @@ class LawsonCamera(object):
 
     def jpgstream(self):
         #Used for mjpeg stream in server
-        img = Image.fromarray(cv2.cvtColor(self(),cv2.COLOR_BGR2RGB))
-        jpg = StringIO()
-        img.save(jpg,'JPEG')
-        return jpg.getvalue()
+        
+        ret, buf = cv2.imencode(".jpg", self()) 
+        return np.array(buf).tostring()
+        
 
     def resizeToCalc(self,frame):
         return cv2.cvtColor(cv2.resize(frame,self.calcsize), cv2.COLOR_RGB2GRAY)
@@ -77,7 +73,7 @@ class LawsonCamera(object):
         files = glob.glob(g)
         for f in files:
             self.keyFromImage(f)
-
+    '''
     def viewkey(self,key):
         #Shows the part of the image associated with a specific bitmap
         img = self.getLawsonFrame()
@@ -111,7 +107,7 @@ class LawsonCamera(object):
             tot += j
 
         return (255.*tot/np.max(tot)).astype(np.uint8)
-
+    '''
     def addCall(self,keyname,fnc,args=()):
         self.keyfnc[keyname] = (fnc,args)
 
@@ -156,7 +152,7 @@ class LawsonCamera(object):
         for k in self.keyactivation:
             self.keyactivation[k] -= activmin
 
-if (__name__=="__main__"):
+if __name__ == "__main__":
     def keyme(key):
         print key
 
