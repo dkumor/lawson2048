@@ -20,9 +20,6 @@ def keypress(ui, key):
     finally:
         mutex.release()
     print "keypress %s" % (key,)
-    #ui.write(e.EV_KEY, key, 1)
-    #ui.write(e.EV_KEY, key, 0)
-    #ui.syn()
 
 def getKeypresses():
     global output
@@ -37,24 +34,16 @@ def getKeypresses():
     return b
 
 def up():
-    #keypress(ui, e.KEY_W)
-    ui = "up"
-    keypress(ui, 0)
+    keypress("up", 0)
 
 def down():
-    #keypress(ui, e.KEY_S)
-    ui = "down"
-    keypress(ui, 2)
+    keypress("down", 2)
 
 def left():
-    ui="left"
-    #keypress(ui, e.KEY_A)
-    keypress(ui, 3)
+    keypress("left", 3)
 
 def right():
-    ui = "right"
-    #keypress(ui, e.KEY_D)
-    keypress(ui, 1)
+    keypress("right", 1)
 
 def scalePctAlpha(num):
     return num / 200.0  + .5
