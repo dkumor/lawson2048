@@ -15,6 +15,8 @@ class LawsonCamera(object):
     def __init__(self):
         self.keys = {}
         self.keyfnc = {}
+        self.cap = None
+
     def start(self,address="rtsp://128.10.29.32:554/axis-media/media.amp?videocodec=h264&amp;camera=1&amp;streamprofile=Bandwidth"):
         self.cap = cv2.VideoCapture(address)
 
@@ -28,7 +30,11 @@ class LawsonCamera(object):
             self.keynorm[k] = self.norm
             self.keyactivation[k] = 0.0
 
-
+    def stop(self):
+        #Clears the video capture
+        if (self.cap is not None):
+            self.cap.release()
+            self.cap = None
 
     def getFrame(self):
         ret, frame = self.cap.read()
@@ -181,3 +187,4 @@ if __name__ == "__main__":
             print "Finished writing"
         elif (k >0):
             break
+    c.stop()

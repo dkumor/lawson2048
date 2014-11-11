@@ -50,9 +50,8 @@ class CamHandler(BaseHTTPRequestHandler):
 
             self.send_200_type('multipart/x-mixed-replace; boundary=--jpgboundary')
 
-            while True:
-                try:
-
+            try:
+                while True:
                     jpg = cam.jpgstream()
                     self.wfile.write("--jpgboundary")
                     self.send_200_type('image/jpeg', len(jpg))
@@ -60,8 +59,10 @@ class CamHandler(BaseHTTPRequestHandler):
 
                     keyboard.update_pct(cam.keyactivation['up'],cam.keyactivation['down'],cam.keyactivation['left'],cam.keyactivation['right'])
 
-                except KeyboardInterrupt:
-                    break
+                    
+            except:
+                #There was some kind of error - clean up the camera
+                cam.stop()
             return
 
 
