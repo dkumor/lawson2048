@@ -6,8 +6,8 @@ import os
 
 class LawsonCamera(object):
     """Allows key control based on Lawson's webcam"""
-    #calcsize = (512,372)
-    calcsize = (1024,744)
+    calcsize = (512,372)
+    #calcsize = (1024,744)
     ndelta = 0.1
     norm = 0.0
     multiplier = 1.0
